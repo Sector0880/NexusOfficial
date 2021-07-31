@@ -1,0 +1,319 @@
+# ГОТОВ
+import discord
+from discord.ext import commands
+
+from datetime import *
+import random
+import asyncio
+import traceback
+
+from botConfig import (
+	avatar as bot_avatar,
+	languages as bot_languages,
+	colors_bot, color_success,
+	emoji_mark_success, emoji_mark_error, emoji_mark_none,
+	emoji_switch_on, emoji_switch_off,
+	emoji_lock_unlock, emoji_lock_lock,
+	emoji_load_ok, emoji_load_partial_lag, emoji_load_lag,
+	emoji_db_ok
+)
+
+from dbVars import (
+	bot_presence,
+	bot_output_correct, bot_output_partial_sleep, bot_output_emoji,
+	bot_message_output_delete_after,
+	bot_mention_embs_stopwatch, bot_mention_embs_checks,
+	bot_testers_work_code_conditions,
+	guild_name, guild_prefix, guild_language, guild_premium, guild_show_id, guild_tester, guild_bot_output,
+	staff_owner_id, staff_testers
+)
+
+
+class BotEvents(commands.Cog):
+	def __init__(self, bot):
+		self.bot = bot
+
+
+	@commands.Cog.listener()
+	async def on_message(self, message):
+		try:
+			if isinstance(message.channel, discord.DMChannel) or message.author.bot: return
+
+
+			if self.bot.user.mention in message.content or f"<@!{self.bot.user.id}>" in message.content:
+				#if bot_testers_work_code_conditions():
+					#if not message.author.id in testers():
+					#if isinstance(message.author.id, testers()):
+					#if testers() in message.author.id:
+						#if guild_language(ctx = message) == "ru": return await message.channel.send(f"{emoji_mark_error} Вы не являетесь участником для тестирования бета-функций.")
+						#if guild_language(ctx = message) == "uk": return await message.channel.send(f"{emoji_mark_error} Ви не є учасником для тестування бета-функцій.")
+				#else: None
+				if not guild_bot_output(ctx = message):
+					if guild_language(ctx = message) == "ru": return await message.channel.send("\n".join([
+						f"{emoji_mark_error if bot_output_emoji() else ''} **На этом сервере работоспособность бота заблокирована.**",
+						f"Для разблокировки обратитесь к разработчику бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
+					]))
+					#elif guild_language(ctx = message) == "uk": return await message.channel.send("\n".join([
+						#f"{emoji_mark_error} **На цьому сервері працездатність бота заблокована.**",
+						#f"Для розблокування зверніться до розробника бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
+					#]))
+					else: return await message.channel.send("\n".join([
+						f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+						f"Языки бота: `{', '.join(bot_languages)}`."
+					]))
+
+
+				bot_name = self.bot.user.name
+
+
+				def status():
+					ping = f"{round(self.bot.latency * 1000)}ms"
+
+
+					if self.bot.latency > 0.25000000000000000: return f"{emoji_load_partial_lag if bot_output_emoji() else ''} `{ping}`"
+					if self.bot.latency > 0.35000000000000000: return f"{emoji_load_lag if bot_output_emoji() else ''} `{ping}`"
+					return f"{emoji_load_ok if bot_output_emoji() else ''} `{ping}`"
+
+
+				if guild_language(ctx = message) == "ru":
+					embs_title = {
+						"title": f"Информация о {bot_name} | beta",
+						"description": f"Основные данные бота на сервере **{guild_name(ctx = message) if bot_output_correct() else guild_name}**.",
+						"color": random.choice(colors_bot)
+					}
+
+					emb_1 = discord.Embed(
+						title = embs_title["title"],
+						description = embs_title["description"],
+						color = embs_title["color"]
+					)
+
+					(emb_1.add_field(
+						name = "Присутствие",
+						value = "\n".join([
+							"**Зашел на сервер:** ####-##-## ##:##:##"
+							#f"**На сервере:** ..."
+						])
+					) if bot_mention_embs_stopwatch() else None)
+					emb_1.add_field(
+						name = "Настройки",
+						value = "\n".join([
+							f"**Префикс:** loading(gif_emoji) `...`",
+							 "**Язык:** loading(gif_emoji) `...`"
+						])
+					)
+					emb_1.add_field(
+						name = "Состояние",
+						value = "\n".join([
+							f"**Пинг:** loading(gif_emoji) `...ms`",
+							f"**База данных:** loading(gif_emoji) `None`"
+						])
+					)
+					emb_1.add_field(
+						name = "Расширенные возможности",
+						value = f"**Nexus +:** loading(gif_emoji) `None`"
+							+ f"\n**Просмотр ID:** loading(gif_emoji) `None`"
+							+ f"\n**Моды:** loading(gif_emoji) `None`",
+						inline = False
+					)
+
+					emb_2 = discord.Embed(
+						title = embs_title["title"],
+						description = embs_title["description"],
+						color = embs_title["color"]
+					)
+
+					emb_3 = discord.Embed(
+						title = embs_title["title"],
+						description = embs_title["description"],
+						color = embs_title["color"]
+					)
+
+					for embs in [emb_2, emb_3]:
+						(embs.add_field(
+							name = "Присутствие",
+							value = "\n".join([
+								#f"**Зашел на сервер:** {self.bot.joined_at.strftime('**Дата:** %d/%m/%Y | **Время:** **%H:%M:%S')}"
+								f"**Зашел на сервер:** {(str(message.guild.me.joined_at)[:-7]) if bot_output_correct() else 'None'}"#\n
+								#f"**На сервере:** {}"
+							])
+						) if bot_mention_embs_stopwatch() else None)
+						embs.add_field(
+							name = "Настройки",
+							value = "\n".join([
+								f"**Префикс:** `{guild_prefix(ctx = message) if bot_output_correct() else guild_prefix}`",
+								f"**Язык:** {(':flag_ru: Русский' if bot_output_emoji() else 'Русский') if bot_output_correct() else 'None'}"
+							])
+						)
+						embs.add_field(
+							name = "Состояние",
+							value = "\n".join([
+								f"**Пинг:** {status() if bot_output_correct() else status}",
+								#f"**База данных:** {(f'{emoji_db_ok} `OK`' if bot_output_emoji() else '`OK`') if bot_output_correct() else 'None'}"
+								f"**База данных:** "
+								+ (
+									f"{emoji_db_ok} `OK`" if bot_output_emoji() else "`OK`"
+								) if bot_output_correct() else "None"
+							])
+						)
+						embs.add_field(
+							name = "Расширенные возможности",
+							value = "\n".join([
+								#f"**Nexus +:** {((f'{emoji_lock_unlock} Доступен' if bot_output_emoji() else 'Доступен') if guild_premium(ctx = message) else (f'{emoji_lock_lock} Недоступен' if bot_output_emoji() else 'Недоступен')) if bot_output_correct() else guild_premium}",
+								f"**Nexus +:** "
+								+ (
+									(
+										f"{emoji_lock_unlock} Доступен" if bot_output_emoji() else "Доступен"
+									) if guild_premium(ctx = message) else (
+										f"{emoji_lock_lock} Недоступен" if bot_output_emoji() else "Недоступен"
+									)
+								) if bot_output_correct() else guild_premium,
+								#f"**Просмотр ID:** {(f'{emoji_switch_on if bot_output_emoji() else ''} Включен' if guild_show_id(ctx = message) else f'{emoji_switch_off if bot_output_emoji() else ''} Выключен') if bot_output_correct() else guild_show_id}",
+								f"**Просмотр ID:** "
+								+ (
+									(
+										f"{emoji_switch_on} Включен" if bot_output_emoji() else "Включен"
+									) if guild_show_id(ctx = message) else (
+										f"{emoji_switch_off} Выключен" if bot_output_emoji() else "Выключен"
+									)
+								) if bot_output_correct() else guild_show_id,
+								#f"**Моды (ревамп):** {('tester' if guild_tester(ctx = message) else 'Отсутствуют') if bot_output_correct() else guild_tester}"
+								f"**Моды (ревамп):** "
+								+ (
+									"tester" if guild_tester(ctx = message) else "Отсутствуют"
+								) if bot_output_correct() else guild_tester
+							]),
+							inline = False
+						)
+
+					emb_2.set_footer(text = "Используйте реакции для выполнения базовых команд (не законченная функция).")
+
+					emb_3.set_footer(text = "Время вышло (10s).")
+				#elif guild_language(ctx = message) == "uk":
+				else: return await message.channel.send("\n".join([
+					f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+					#f"Языки бота: {', '.join(f'`{[bot_languages]}`')}."
+					f"Языки бота: {', '.join(bot_languages)}."
+				]))
+				for embs in [emb_2, emb_3]:
+					embs.set_thumbnail(url = bot_avatar)
+
+
+				msg = await message.channel.send(embed = emb_1)
+				await asyncio.sleep(bot_output_partial_sleep() if isinstance(bot_output_partial_sleep(), int) else None)
+				await msg.edit(embed = emb_2)
+				await msg.add_reaction(emoji_mark_none)
+
+
+				if bot_mention_embs_checks():
+					if guild_language(ctx = message) == "ru":
+						await message.channel.send(
+							embed = discord.Embed(
+								description = f"{emoji_mark_success if bot_output_emoji() else ''} Никаких ограничений на этом сервере не было установлено.",
+								color = color_success
+							).set_footer(text = "Nexus security | version 0.9.1"),
+							delete_after = bot_message_output_delete_after() if isinstance(bot_message_output_delete_after(), int) else None
+						)
+
+
+				try: await self.bot.wait_for("reaction_add", timeout = 10.0, check = lambda r, u: str(r.emoji) == emoji_mark_none and not u.bot and u.id == message.author.id)
+				except asyncio.TimeoutError: await msg.edit(embed = emb_3)
+				else:
+					if guild_language(ctx = message) == "ru": await message.channel.send("Быстрый доступ разрабатывается, просим немного подождать.")
+					#elif guild_language(ctx = message) == "uk": await message.channel.send("Швидкий доступ розробляється, просимо трохи почекати.")
+					else: return await message.channel.send("\n".join([
+						f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+						f"Языки бота: `{', '.join(bot_languages)}`."
+					]))
+		except:
+			if guild_language(ctx = message) == "ru": await message.channel.send(f"```makefile\nТерминал:\n{traceback.format_exc()}```")
+			#elif guild_language(ctx = message) == "uk": await message.channel.send(f"```makefile\nТермінал:\n{traceback.format_exc()}```")
+			else: return await message.channel.send("\n".join([
+				f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+				f"Языки бота: `{', '.join(bot_languages)}`."
+			]))
+
+
+	@commands.Cog.listener()
+	async def on_command_error(self, ctx, error):
+		try:
+			if isinstance(ctx.channel, discord.DMChannel): return
+
+
+			if not guild_bot_output(ctx = ctx):
+				if guild_language(ctx = ctx) == "ru": return await ctx.send("\n".join([
+					f"{emoji_mark_error} **На этом сервере работоспособность бота заблокирована.**",
+					f"Для разблокировки обратитесь к разработчику бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
+				]))
+				#elif guild_language(ctx = ctx) == "uk": return await ctx.send("\n".join([
+					#f"{emoji_mark_error} **На цьому сервері працездатність бота заблокована.**",
+					#f"Для розблокування зверніться до розробника бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
+				#]))
+				else: return await ctx.send("\n".join([
+					f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
+					f"Языки бота: `{', '.join(bot_languages)}`."
+				]))
+
+
+			if isinstance(error, commands.CommandNotFound):
+				if guild_language(ctx = ctx) == "ru":
+					return await ctx.send("\n".join([
+						f"{emoji_mark_error} **Команда** `{ctx.invoked_with}` {f'**вместе с аргументом(ами)** `{ctx.args}`' if ctx.args else ''} **не найдена.**",
+						#f"Выполните команду `{guild_prefix}хелп` чтобы получить список команд."
+						f"Пока не будет разработана команда `{guild_prefix(ctx = ctx) if bot_output_correct() else guild_prefix}хелп` просим связаться с разработчиком бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>) для получения списка команд."
+					]))
+				#elif guild_language(ctx = ctx) == "uk":
+				else: return await ctx.send("\n".join([
+					f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
+					f"Языки бота: `{', '.join(bot_languages)}`."
+				]))
+
+			if isinstance(error, commands.CommandError):
+				if guild_language(ctx = ctx) == "ru":
+					await ctx.send("Неаргументированная ошибка была перехвачена. Вывод дебагера:")
+					await ctx.send(f"```makefile\nТерминал:\n{traceback.format_exc()}```")
+					await ctx.send("_ _")
+					await ctx.send(f"```makefile\nКоманда:\n{error}```")
+				#elif guild_language(ctx = ctx) == "uk":
+				else: return await ctx.send("\n".join([
+					f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
+					f"Языки бота: `{', '.join(bot_languages)}`."
+				]))
+		except:
+			if guild_language(ctx = ctx) == "ru": await ctx.send(f"```makefile\nТерминал:\n{traceback.format_exc()}```")
+			#elif guild_language(ctx = ctx) == "uk": await ctx.send(f"```makefile\nТермінал:\n{traceback.format_exc()}```")
+			else: return await ctx.send("\n".join([
+				f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
+				f"Языки бота: `{', '.join(bot_languages)}`."
+			]))
+	
+	#@commands.Cog.listener()
+	#async def on_command(self, message):
+		#if not guild_bot_output(ctx = message):
+			#if guild_language(ctx = message) == "ru": return await message.channel.send("\n".join([
+				#f"{emoji_mark_error} **На этом сервере работоспособность бота заблокирована.**",
+				#f"Для разблокировки обратитесь к разработчику бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
+			#]))
+			#elif guild_language(ctx = ctx) == "uk": return await ctx.send("\n".join([
+				#f"{emoji_mark_error} **На цьому сервері працездатність бота заблокована.**",
+				#f"Для розблокування зверніться до розробника бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
+			#]))
+			#else: return await message.channel.send("\n".join([
+				#f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+				#f"Языки бота: `{', '.join(bot_languages)}`."
+			#]))
+
+
+	@commands.Cog.listener()
+	async def on_ready(self):
+		await self.bot.change_presence(status = discord.Status.online, activity = discord.Game(bot_presence()))
+
+		print("\n".join([
+			"/ " *20,
+			#f"{(datetime.now()).strftime('%d-%m-%Y %H:%M:%S')} {self.bot.user} успешно запустился!"
+			f"{datetime.now()} {self.bot.user} успешно запустился!"
+		])) #▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬
+
+
+def setup(bot):
+	bot.add_cog(BotEvents(bot))
