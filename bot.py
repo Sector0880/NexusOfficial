@@ -53,8 +53,10 @@ class LoadingCogs:
 
 			#print(f"{datetime.now()} Файлы {', '.join([filename])} в коге cogs/commands загружены!")
 	
-	#for filename in os.listdir("./botConfiguration/cogs/commands/special"):
-		#if filename.endswith(".py"):
-			#bot.load_extension(f"botConfiguration.cogs.commands.special.{filename[:-3]}")
+	for filename in os.listdir("./botConfiguration/cogs/commands/special"):
+		if filename.endswith(".py"):
+			bot.load_extension(f"botConfiguration.cogs.commands.special.{filename[:-3]}")
 
-			#print(f"{datetime.now()} Файлы {', '.join([filename])} в коге cogs/commands/special загружены!")
+			print(f"{datetime.now()} Файлы {', '.join([filename])} в коге cogs/commands/special загружены!")
+
+

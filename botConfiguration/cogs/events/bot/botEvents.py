@@ -1,4 +1,5 @@
-# ГОТОВ
+# ОБНОВЛЯЕТСЯ
+# 1. добавить украинский текст
 import discord
 from discord.ext import commands
 
@@ -8,14 +9,15 @@ import asyncio
 import traceback
 
 from botConfig import (
-	avatar as bot_avatar,
+	version as bot_version,
 	languages as bot_languages,
-	colors_bot, color_success,
+	avatar as bot_avatar,
+	colors_bot, color_success, color_error,
 	emoji_mark_success, emoji_mark_error, emoji_mark_none,
 	emoji_switch_on, emoji_switch_off,
 	emoji_lock_unlock, emoji_lock_lock,
-	emoji_load_ok, emoji_load_partial_lag, emoji_load_lag,
-	emoji_db_ok
+	emoji_load_ok, emoji_load_partial_lag, emoji_load_lag, emoji_load_none,
+	emoji_db_ok, emoji_db_rework
 )
 
 from dbVars import (
@@ -24,8 +26,12 @@ from dbVars import (
 	bot_message_output_delete_after,
 	bot_mention_embs_stopwatch, bot_mention_embs_checks,
 	bot_testers_work_code_conditions,
-	guild_name, guild_prefix, guild_language, guild_premium, guild_show_id, guild_tester, guild_bot_output,
-	staff_owner_id, staff_testers
+	guild_name, guild_prefix, guild_language,
+	guild_premium, guild_show_id, guild_tester,
+	guild_bot_output,
+	staff_owner_id, staff_testers,
+	error_server_blocked, error_invalid_language,
+	error_terminal_traceback_error, error_terminal_command_error
 )
 
 
@@ -41,6 +47,7 @@ class BotEvents(commands.Cog):
 
 
 			if self.bot.user.mention in message.content or f"<@!{self.bot.user.id}>" in message.content:
+				# переработать
 				#if bot_testers_work_code_conditions():
 					#if not message.author.id in testers():
 					#if isinstance(message.author.id, testers()):
@@ -50,16 +57,25 @@ class BotEvents(commands.Cog):
 				#else: None
 				if not guild_bot_output(ctx = message):
 					if guild_language(ctx = message) == "ru": return await message.channel.send("\n".join([
-						f"{emoji_mark_error if bot_output_emoji() else ''} **На этом сервере работоспособность бота заблокирована.**",
-						f"Для разблокировки обратитесь к разработчику бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
+						#f"{emoji_mark_error if bot_output_emoji() else ''} **На этом сервере работоспособность бота заблокирована.**",
+						error_server_blocked()["ru"]["error"]["title"].format(emoji_mark_error if bot_output_emoji() else ""),
+						#f"Для разблокировки обратитесь к разработчику бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
+						error_server_blocked()["ru"]["error"]["description"].format(staff_owner_id() if bot_output_correct() else staff_owner_id)
 					]))
-					#elif guild_language(ctx = message) == "uk": return await message.channel.send("\n".join([
+					elif guild_language(ctx = message) == "uk": return await message.channel.send("\n".join([
 						#f"{emoji_mark_error} **На цьому сервері працездатність бота заблокована.**",
+						error_server_blocked()["uk"]["error"]["title"].format(emoji_mark_error if bot_output_emoji() else ""),
 						#f"Для розблокування зверніться до розробника бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
-					#]))
+						error_server_blocked()["uk"]["error"]["description"].format(staff_owner_id() if bot_output_correct() else staff_owner_id)
+					]))
 					else: return await message.channel.send("\n".join([
-						f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
-						f"Языки бота: `{', '.join(bot_languages)}`."
+						#f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+						error_invalid_language()["ru"]["error"]["title"].format(
+							emoji_mark_error if bot_output_emoji() else "",
+							guild_language(ctx = message)
+						),
+						#f"Языки бота: `{', '.join(bot_languages)}`."
+						error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
 					]))
 
 
@@ -77,7 +93,8 @@ class BotEvents(commands.Cog):
 
 				if guild_language(ctx = message) == "ru":
 					embs_title = {
-						"title": f"Информация о {bot_name} | beta",
+						#"title": f"Информация о {bot_name} | beta",
+						"title": f"Карточка сервера | version 1.0",
 						"description": f"Основные данные бота на сервере **{guild_name(ctx = message) if bot_output_correct() else guild_name}**.",
 						"color": random.choice(colors_bot)
 					}
@@ -191,9 +208,13 @@ class BotEvents(commands.Cog):
 					emb_3.set_footer(text = "Время вышло (10s).")
 				#elif guild_language(ctx = message) == "uk":
 				else: return await message.channel.send("\n".join([
-					f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
-					#f"Языки бота: {', '.join(f'`{[bot_languages]}`')}."
-					f"Языки бота: {', '.join(bot_languages)}."
+					#f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+					error_invalid_language()["ru"]["error"]["title"].format(
+						emoji_mark_error if bot_output_emoji() else "",
+						guild_language(ctx = message)
+					),
+					#f"Языки бота: `{', '.join(bot_languages)}`."
+					error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
 				]))
 				for embs in [emb_2, emb_3]:
 					embs.set_thumbnail(url = bot_avatar)
@@ -214,6 +235,12 @@ class BotEvents(commands.Cog):
 							).set_footer(text = "Nexus security | version 0.9.1"),
 							delete_after = bot_message_output_delete_after() if isinstance(bot_message_output_delete_after(), int) else None
 						)
+						await message.channel.send(
+							embed = discord.Embed(
+								description = f"Идут технические работы с конфигурацией бота, в связи с этим могут быть проблемы с некоторыми его функциями, которые я хочу как можно скорее исправить.\nИзвиняюсь за неудобства, ваш <@{staff_owner_id()}>."
+							).set_footer(text = "Nexus news"),
+							delete_after = 15
+						)
 
 
 				try: await self.bot.wait_for("reaction_add", timeout = 10.0, check = lambda r, u: str(r.emoji) == emoji_mark_none and not u.bot and u.id == message.author.id)
@@ -222,15 +249,25 @@ class BotEvents(commands.Cog):
 					if guild_language(ctx = message) == "ru": await message.channel.send("Быстрый доступ разрабатывается, просим немного подождать.")
 					#elif guild_language(ctx = message) == "uk": await message.channel.send("Швидкий доступ розробляється, просимо трохи почекати.")
 					else: return await message.channel.send("\n".join([
-						f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
-						f"Языки бота: `{', '.join(bot_languages)}`."
+						#f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+						error_invalid_language()["ru"]["error"]["title"].format(
+							emoji_mark_error if bot_output_emoji() else "",
+							guild_language(ctx = message)
+						),
+						#f"Языки бота: `{', '.join(bot_languages)}`."
+						error_invalid_language()["ru"]["error"]["description"].format(', '.join(bot_languages))
 					]))
 		except:
-			if guild_language(ctx = message) == "ru": await message.channel.send(f"```makefile\nТерминал:\n{traceback.format_exc()}```")
-			#elif guild_language(ctx = message) == "uk": await message.channel.send(f"```makefile\nТермінал:\n{traceback.format_exc()}```")
+			if guild_language(ctx = message) == "ru": await message.channel.send(error_terminal_traceback_error()["ru"]["error"]["output"].format(traceback.format_exc()))
+			#elif guild_language(ctx = message) == "uk": await message.channel.send(error_terminal_traceback_error()["uk"]["error"]["output"].format(traceback.format_exc()))
 			else: return await message.channel.send("\n".join([
-				f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
-				f"Языки бота: `{', '.join(bot_languages)}`."
+				#f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+				error_invalid_language()["ru"]["error"]["title"].format(
+					emoji_mark_error if bot_output_emoji() else "",
+					guild_language(ctx = message)
+				),
+				#f"Языки бота: `{', '.join(bot_languages)}`."
+				error_invalid_language()["ru"]["error"]["description"].format(', '.join(bot_languages))
 			]))
 
 
@@ -241,17 +278,24 @@ class BotEvents(commands.Cog):
 
 
 			if not guild_bot_output(ctx = ctx):
-				if guild_language(ctx = ctx) == "ru": return await ctx.send("\n".join([
-					f"{emoji_mark_error} **На этом сервере работоспособность бота заблокирована.**",
-					f"Для разблокировки обратитесь к разработчику бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
+				if guild_language(ctx = ctx) == "ru": return await ctx.channel.send("\n".join([
+					#f"{emoji_mark_error if bot_output_emoji() else ''} **На этом сервере работоспособность бота заблокирована.**",
+					error_server_blocked()["ru"]["error"]["title"].format(emoji_mark_error if bot_output_emoji() else ""),
+					#f"Для разблокировки обратитесь к разработчику бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
+					error_server_blocked()["ru"]["error"]["description"].format(staff_owner_id() if bot_output_correct() else staff_owner_id)
 				]))
 				#elif guild_language(ctx = ctx) == "uk": return await ctx.send("\n".join([
 					#f"{emoji_mark_error} **На цьому сервері працездатність бота заблокована.**",
 					#f"Для розблокування зверніться до розробника бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
 				#]))
-				else: return await ctx.send("\n".join([
-					f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
-					f"Языки бота: `{', '.join(bot_languages)}`."
+				else: return await ctx.channel.send("\n".join([
+					#f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
+					error_invalid_language()["ru"]["error"]["title"].format(
+						emoji_mark_error if bot_output_emoji() else "",
+						guild_language(ctx = ctx)
+					),
+					#f"Языки бота: `{', '.join(bot_languages)}`."
+					error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
 				]))
 
 
@@ -264,27 +308,42 @@ class BotEvents(commands.Cog):
 					]))
 				#elif guild_language(ctx = ctx) == "uk":
 				else: return await ctx.send("\n".join([
-					f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
-					f"Языки бота: `{', '.join(bot_languages)}`."
+					#f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
+					error_invalid_language()["ru"]["error"]["title"].format(
+						emoji_mark_error if bot_output_emoji() else "",
+						guild_language(ctx = ctx)
+					),
+					#f"Языки бота: `{', '.join(bot_languages)}`."
+					error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
 				]))
 
 			if isinstance(error, commands.CommandError):
 				if guild_language(ctx = ctx) == "ru":
 					await ctx.send("Неаргументированная ошибка была перехвачена. Вывод дебагера:")
-					await ctx.send(f"```makefile\nТерминал:\n{traceback.format_exc()}```")
+					await ctx.send(error_terminal_traceback_error()["ru"]["error"]["output"].format(traceback.format_exc()))
 					await ctx.send("_ _")
-					await ctx.send(f"```makefile\nКоманда:\n{error}```")
+					await ctx.send(error_terminal_command_error()["ru"]["error"]["output"].format(error))
 				#elif guild_language(ctx = ctx) == "uk":
 				else: return await ctx.send("\n".join([
-					f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
-					f"Языки бота: `{', '.join(bot_languages)}`."
+					#f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
+					error_invalid_language()["ru"]["error"]["title"].format(
+						emoji_mark_error if bot_output_emoji() else "",
+						guild_language(ctx = ctx)
+					),
+					#f"Языки бота: `{', '.join(bot_languages)}`."
+					error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
 				]))
 		except:
-			if guild_language(ctx = ctx) == "ru": await ctx.send(f"```makefile\nТерминал:\n{traceback.format_exc()}```")
+			if guild_language(ctx = ctx) == "ru": await ctx.send(error_terminal_traceback_error()["ru"]["error"]["output"].format(traceback.format_exc()))
 			#elif guild_language(ctx = ctx) == "uk": await ctx.send(f"```makefile\nТермінал:\n{traceback.format_exc()}```")
 			else: return await ctx.send("\n".join([
-				f"{emoji_mark_error} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
-				f"Языки бота: `{', '.join(bot_languages)}`."
+				#f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
+				error_invalid_language()["ru"]["error"]["title"].format(
+					emoji_mark_error if bot_output_emoji() else "",
+					guild_language(ctx = ctx)
+				),
+				#f"Языки бота: `{', '.join(bot_languages)}`."
+				error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
 			]))
 	
 	#@commands.Cog.listener()

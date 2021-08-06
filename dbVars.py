@@ -1,24 +1,33 @@
+# ГОТОВ
 import json
+import yaml
 
 
 class Bot:
 	def bot_config_data(self):
-		with open("./botConfiguration/.db/bot/botConfiguration/botConfig.json", "r") as read_file: return json.load(read_file)
+		with open("./botConfiguration/.db/bot/botConfiguration/botConfig.yml", "r") as read_file: return yaml.safe_load(read_file)
 	def bot_switches_data(self):
-		with open("./botConfiguration/.db/bot/botConfiguration/botSwitches.json", "r") as read_file: return json.load(read_file)
+		with open("./botConfiguration/.db/bot/botConfiguration/botSwitches.yml", "r") as read_file: return yaml.safe_load(read_file)
 	
 	def get_bot_presence(self): return self.bot_config_data()["presence"]["title"]
 
-	def get_bot_output_correct(self): return self.bot_switches_data()["dev"][0]["special-functions"][0]["commands"][0]["output"]["correct"]
-	def get_bot_output_partial_sleep(self): return self.bot_switches_data()["dev"][0]["special-functions"][0]["commands"][0]["output"]["partial-sleep"]
-	def get_bot_output_emoji(self): return self.bot_switches_data()["dev"][0]["special-functions"][0]["commands"][0]["output"]["emoji"]
+	#def get_bot_output_correct(self): return self.bot_switches_data()["dev"][0]["special-functions"][0]["commands"][0]["output"]["correct"]
+	def get_bot_output_correct(self): return self.bot_switches_data()["dev"]["special-functions"]["commands"]["output"]["correct"]
+	#def get_bot_output_partial_sleep(self): return self.bot_switches_data()["dev"][0]["special-functions"][0]["commands"][0]["output"]["partial-sleep"]
+	def get_bot_output_partial_sleep(self): return self.bot_switches_data()["dev"]["special-functions"]["commands"]["output"]["partial-sleep"]
+	#def get_bot_output_emoji(self): return self.bot_switches_data()["dev"][0]["special-functions"][0]["commands"][0]["output"]["emoji"]
+	def get_bot_output_emoji(self): return self.bot_switches_data()["dev"]["special-functions"]["commands"]["output"]["emoji"]
 
-	def get_bot_message_output_delete_after(self): return self.bot_switches_data()["dev"][0]["special-functions"][1]["message-output"]["delete_after"]
+	#def get_bot_message_output_delete_after(self): return self.bot_switches_data()["dev"][0]["special-functions"][1]["message-output"]["delete_after"]
+	def get_bot_message_output_delete_after(self): return self.bot_switches_data()["dev"]["special-functions"]["message-output"]["delete_after"]
 
-	def get_bot_mention_embs_stopwatch(self): return self.bot_switches_data()["dev"][1]["updates"][0]["commands"][0]["mention"]["embs"]["stopwatch"]
-	def get_bot_mention_embs_checks(self): return self.bot_switches_data()["dev"][1]["updates"][0]["commands"][0]["mention"]["embs"]["checks"]
+	#def get_bot_mention_embs_stopwatch(self): return self.bot_switches_data()["dev"][1]["updates"][0]["commands"][0]["mention"]["embs"]["stopwatch"]
+	def get_bot_mention_embs_stopwatch(self): return self.bot_switches_data()["dev"]["updates"]["commands"]["mention"]["embs"]["stopwatch"]
+	#def get_bot_mention_embs_checks(self): return self.bot_switches_data()["dev"][1]["updates"][0]["commands"][0]["mention"]["embs"]["checks"]
+	def get_bot_mention_embs_checks(self): return self.bot_switches_data()["dev"]["updates"]["commands"]["mention"]["embs"]["checks"]
 
-	def get_bot_testers_work_code_conditions(self): return self.bot_switches_data()["testers"][0]["work_code-conditions"]
+	#def get_bot_testers_work_code_conditions(self): return self.bot_switches_data()["testers"][0]["work_code-conditions"]
+	def get_bot_testers_work_code_conditions(self): return self.bot_switches_data()["testers"]["work_code-conditions"]
 
 bot_presence = Bot().get_bot_presence
 
@@ -70,3 +79,20 @@ class Staff:
 staff_owner_id = Staff().get_staff_owner_id
 
 staff_testers = Staff().get_testers
+
+
+class Doc:
+	class Errors:
+		def get_error_server_blocked(self):
+			with open("./botConfiguration/.db/doc/errors/serverBlocked.yml") as read_file: return yaml.safe_load(read_file)
+		def get_error_invalid_language(self):
+			with open("./botConfiguration/.db/doc/errors/invalidLanguage.yml") as read_file: return yaml.safe_load(read_file)
+		def get_error_terminal_traceback_error(self):
+			with open("./botConfiguration/.db/doc/errors/terminalTracebackError.yml") as read_file: return yaml.safe_load(read_file)
+		def get_error_terminal_command_error(self):
+			with open("./botConfiguration/.db/doc/errors/terminalCommandError.yml") as read_file: return yaml.safe_load(read_file)
+
+error_server_blocked = Doc().Errors().get_error_server_blocked
+error_invalid_language = Doc().Errors().get_error_invalid_language
+error_terminal_traceback_error = Doc().Errors().get_error_terminal_traceback_error
+error_terminal_command_error = Doc().Errors().get_error_terminal_command_error

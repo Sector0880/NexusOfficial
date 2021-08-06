@@ -1,14 +1,15 @@
+# ГОТОВ
 version = {
 	"number": "0.9.1.1",
-	"name": "Picafo"
+	"name": "Malifiac"
 }
 
 
-languages = ["ru", "uk (скоро)"]
+languages = ["ru", "uk"]
 
 
 avatar = "https://cdn.discordapp.com/attachments/817116435351863306/825447378105925672/avatarNexus.gif"
-#avatar = "./botConfiguration/.db/bot/avatars/avatarNexus.gif"
+#avatar = "./botConfiguration/.db/bot/avatars/avatarNexus.jpeg"
 
 
 colors = [
