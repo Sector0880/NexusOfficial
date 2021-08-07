@@ -14,4 +14,4 @@ dev:
           stopwatch: true
           checks: true
 testers:
-  work_code-conditions: false
+  work_code-conditions: true

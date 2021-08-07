@@ -26,8 +26,9 @@ from dbVars import (
 	guild_name, guild_prefix, guild_language,
 	guild_premium, guild_show_id, guild_tester,
 	guild_bot_output,
-	staff_owner_id, staff_testers,
-	error_server_blocked, error_invalid_language,
+	staff_owner_id, staff_testers_list,
+	error_server_blocked, error_user_not_tester,
+	error_invalid_language,
 	error_terminal_traceback_error, error_terminal_command_error
 )
 
@@ -55,13 +56,23 @@ class Cmd_update_check(commands.Cog):
 			]))
 			else:
 				#await ctx.send("\n".join([
-				#f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
-				#error_invalid_language()["ru"]["error"]["title"].format(
-					#emoji_mark_error if bot_output_emoji() else "",
-					#guild_language(ctx = ctx)
-				#),
-				#f"Языки бота: `{', '.join(bot_languages)}`."
-				#error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
+					#f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
+					#error_invalid_language()["ru"]["error"]["title"].format(
+						#emoji_mark_error if bot_output_emoji() else "",
+						#guild_language(ctx = ctx)
+					#),
+					#f"Языки бота: `{', '.join(bot_languages)}`."
+					#error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
+				#]))
+				#await ctx.send("▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬")
+				#return await ctx.send("\n".join([
+					#f"{emoji_mark_error if bot_output_emoji() else ''} Варто підтримуваний мову `{guild_language(ctx = ctx)}`.",
+					#error_invalid_language()["uk"]["error"]["title"].format(
+						#emoji_mark_error if bot_output_emoji() else "",
+						#guild_language(ctx = ctx)
+					#),
+					#f"Мови бота: `{', '.join(bot_languages)}`."
+					#error_invalid_language()["uk"]["error"]["description"].format(", ".join(bot_languages))
 				#]))
 				await ctx.send(embed = discord.Embed(
 					#title = f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
@@ -73,24 +84,15 @@ class Cmd_update_check(commands.Cog):
 						error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
 					])
 				))
-				#await ctx.send("▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬")
-				#return await ctx.send("\n".join([
-				#f"{emoji_mark_error if bot_output_emoji() else ''} Варто підтримуваний мову `{guild_language(ctx = ctx)}`.",
-				#error_invalid_language()["uk"]["error"]["title"].format(
-					#emoji_mark_error if bot_output_emoji() else "",
-					#guild_language(ctx = ctx)
-				#),
-				#f"Мови бота: `{', '.join(bot_languages)}`."
-				#error_invalid_language()["uk"]["error"]["description"].format(", ".join(bot_languages))
-				#]))
 				return await ctx.send(embed = discord.Embed(
 					#title = f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = ctx)}`.",
-					title = error_invalid_language()["uk"]["error"]["title"].format(
-					emoji_mark_error if bot_output_emoji() else "",
-					guild_language(ctx = ctx)
-					),
-					#description = f"Языки бота: `{', '.join(bot_languages)}`."
-					description = error_invalid_language()["uk"]["error"]["description"].format(", ".join(bot_languages))
+					description = "\n".join([
+						error_invalid_language()["uk"]["error"]["title"].format(
+							emoji_mark_error if bot_output_emoji() else "",
+							guild_language(ctx = ctx)
+						),
+						error_invalid_language()["uk"]["error"]["description"].format(", ".join(bot_languages))
+					])
 				))
 
 

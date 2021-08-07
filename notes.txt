@@ -24,7 +24,8 @@ from dbVars import (
 	guild_name, guild_prefix, guild_language,
 	guild_premium, guild_show_id, guild_tester,
 	guild_bot_output,
-	staff_owner_id, staff_testers,
-	error_server_blocked, error_invalid_language,
+	staff_owner_id, staff_testers_list,
+	error_server_blocked, error_user_not_tester,
+	error_invalid_language,
 	error_terminal_traceback_error, error_terminal_command_error
 )

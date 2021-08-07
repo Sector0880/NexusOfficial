@@ -29,8 +29,9 @@ from dbVars import (
 	guild_name, guild_prefix, guild_language,
 	guild_premium, guild_show_id, guild_tester,
 	guild_bot_output,
-	staff_owner_id, staff_testers,
-	error_server_blocked, error_invalid_language,
+	staff_owner_id, staff_testers_list,
+	error_server_blocked, error_user_not_tester,
+	error_invalid_language,
 	error_terminal_traceback_error, error_terminal_command_error
 )
 
@@ -47,14 +48,47 @@ class BotEvents(commands.Cog):
 
 
 			if self.bot.user.mention in message.content or f"<@!{self.bot.user.id}>" in message.content:
-				# переработать
-				#if bot_testers_work_code_conditions():
-					#if not message.author.id in testers():
-					#if isinstance(message.author.id, testers()):
-					#if testers() in message.author.id:
-						#if guild_language(ctx = message) == "ru": return await message.channel.send(f"{emoji_mark_error} Вы не являетесь участником для тестирования бета-функций.")
-						#if guild_language(ctx = message) == "uk": return await message.channel.send(f"{emoji_mark_error} Ви не є учасником для тестування бета-функцій.")
-				#else: None
+				if bot_testers_work_code_conditions():
+					for tester in staff_testers_list():
+						if message.author.id != tester:
+							if guild_language(ctx = message) == "ru": return await message.channel.send(
+								embed = discord.Embed(
+									description = error_user_not_tester()["ru"]["error"]["output"].format(emoji_mark_error),
+									color = color_error
+									)
+							)
+							elif guild_language(ctx = message) == "uk": return await message.channel.send(
+								embed = discord.Embed(
+									description = error_user_not_tester()["uk"]["error"]["output"].format(emoji_mark_error),
+									color = color_error
+									)
+							)
+							else:
+								await message.channel.send(embed = discord.Embed(
+									description = "\n".join([
+										#title = f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+										error_invalid_language()["ru"]["error"]["title"].format(
+											emoji_mark_error if bot_output_emoji() else "",
+											guild_language(ctx = message)
+										),
+										#f"Языки бота: `{', '.join(bot_languages)}`."
+										error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
+									]),
+									color = color_error
+								))
+								return await message.channel.send(embed = discord.Embed(
+									description = "\n".join([
+										#title = f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+										error_invalid_language()["uk"]["error"]["title"].format(
+											emoji_mark_error if bot_output_emoji() else "",
+											guild_language(ctx = message)
+										),
+										#f"Языки бота: `{', '.join(bot_languages)}`."
+										error_invalid_language()["uk"]["error"]["description"].format(", ".join(bot_languages))
+									]),
+									color = color_error
+								))
+
 				if not guild_bot_output(ctx = message):
 					if guild_language(ctx = message) == "ru": return await message.channel.send("\n".join([
 						#f"{emoji_mark_error if bot_output_emoji() else ''} **На этом сервере работоспособность бота заблокирована.**",
@@ -68,15 +102,48 @@ class BotEvents(commands.Cog):
 						#f"Для розблокування зверніться до розробника бота (<@{staff_owner_id() if bot_output_correct() else staff_owner_id}>)."
 						error_server_blocked()["uk"]["error"]["description"].format(staff_owner_id() if bot_output_correct() else staff_owner_id)
 					]))
-					else: return await message.channel.send("\n".join([
-						#f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
-						error_invalid_language()["ru"]["error"]["title"].format(
-							emoji_mark_error if bot_output_emoji() else "",
-							guild_language(ctx = message)
-						),
-						#f"Языки бота: `{', '.join(bot_languages)}`."
-						error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
-					]))
+					else:
+						#await message.channel.send("\n".join([
+							#f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+							#error_invalid_language()["ru"]["error"]["title"].format(
+								#emoji_mark_error if bot_output_emoji() else "",
+								#guild_language(ctx = ctx)
+							#),
+							#f"Языки бота: `{', '.join(bot_languages)}`."
+							#error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
+						#]))
+						#await ctx.send("▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬ ▬")
+						#return await message.channel.send("\n".join([
+							#f"{emoji_mark_error if bot_output_emoji() else ''} Варто підтримуваний мову `{guild_language(ctx = message)}`.",
+							#error_invalid_language()["uk"]["error"]["title"].format(
+								#emoji_mark_error if bot_output_emoji() else "",
+								#guild_language(ctx = ctx)
+							#),
+							#f"Мови бота: `{', '.join(bot_languages)}`."
+							#error_invalid_language()["uk"]["error"]["description"].format(", ".join(bot_languages))
+						#]))
+						await message.channel.send(embed = discord.Embed(
+							#title = f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+							description = "\n".join([
+								error_invalid_language()["ru"]["error"]["title"].format(
+									emoji_mark_error if bot_output_emoji() else "",
+									guild_language(ctx = message)
+								),
+								#f"Языки бота: `{', '.join(bot_languages)}`."
+								error_invalid_language()["ru"]["error"]["description"].format(", ".join(bot_languages))
+							])
+						))
+						return await message.channel.send(embed = discord.Embed(
+							#title = f"{emoji_mark_error if bot_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+							description = "\n".join([
+								error_invalid_language()["uk"]["error"]["title"].format(
+									emoji_mark_error if bot_output_emoji() else "",
+									guild_language(ctx = message)
+								),
+								#f"Языки бота: `{', '.join(bot_languages)}`."
+								error_invalid_language()["uk"]["error"]["description"].format(", ".join(bot_languages))
+							])
+						))
 
 
 				bot_name = self.bot.user.name

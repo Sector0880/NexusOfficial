@@ -73,7 +73,7 @@
             "owner": 522136072151367691
         },
         "prefix": "j!",
-        "language": "rus",
+        "language": "ru",
         "additional-features": [
             {
                 "privileges": [
@@ -96,7 +96,7 @@
         "protection": [
             {
                 "gateaway": {
-                    "bot_output": false
+                    "bot_output": true
                 }
             }
         ]

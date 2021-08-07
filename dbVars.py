@@ -70,21 +70,23 @@ guild_bot_output = Guild().get_guild_bot_output
 
 class Staff:
 	def staff_config_data(self):
-		with open("./botConfiguration/.db/staff/list/staffList.json", "r") as read_file: return json.load(read_file)
+		with open("./botConfiguration/.db/staff/list/staffList.yml", "r") as read_file: return yaml.safe_load(read_file)
 
 	def get_staff_owner_id(self): return self.staff_config_data()["owner"]["id"]
 
-	def get_testers(self): return self.staff_config_data()["testers"]
+	def get_testers_list(self): return self.staff_config_data()["testers"]["testers-list"]
 
 staff_owner_id = Staff().get_staff_owner_id
 
-staff_testers = Staff().get_testers
+staff_testers_list = Staff().get_testers_list
 
 
 class Doc:
 	class Errors:
 		def get_error_server_blocked(self):
 			with open("./botConfiguration/.db/doc/errors/serverBlocked.yml") as read_file: return yaml.safe_load(read_file)
+		def get_error_user_not_tester(self):
+			with open("./botConfiguration/.db/doc/errors/userNotTester.yml") as read_file: return yaml.safe_load(read_file)
 		def get_error_invalid_language(self):
 			with open("./botConfiguration/.db/doc/errors/invalidLanguage.yml") as read_file: return yaml.safe_load(read_file)
 		def get_error_terminal_traceback_error(self):
@@ -93,6 +95,7 @@ class Doc:
 			with open("./botConfiguration/.db/doc/errors/terminalCommandError.yml") as read_file: return yaml.safe_load(read_file)
 
 error_server_blocked = Doc().Errors().get_error_server_blocked
+error_user_not_tester = Doc().Errors().get_error_user_not_tester
 error_invalid_language = Doc().Errors().get_error_invalid_language
 error_terminal_traceback_error = Doc().Errors().get_error_terminal_traceback_error
 error_terminal_command_error = Doc().Errors().get_error_terminal_command_error
