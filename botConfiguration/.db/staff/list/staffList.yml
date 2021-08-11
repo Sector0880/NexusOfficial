@@ -5,4 +5,14 @@ testers:
   tester-1:
     name: "Sector#1327"
     id: 522136072151367691
-  testers-list: [0]
+  main-testers:
+    testers-list: [0]
+  divided-testers:
+    for_functions:
+      mention:
+        testers-list: [0]
+    for_commands:
+      db_info:
+        testers-list: [0]
+      update_check:
+        testers-list: [0]

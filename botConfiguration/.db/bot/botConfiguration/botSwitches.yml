@@ -1,17 +1,18 @@
-dev:
-  special-functions:
-    commands:
-      output:
-        correct: true
-        partial-sleep: false
-        emoji: true
-    message-output:
-      delete_after: 5
-  updates:
-    commands:
-      mention:
-        embs:
-          stopwatch: true
-          checks: true
-testers:
-  work_code-conditions: true
+work_functions:
+  mention: false
+work_commands:
+  db_info: true
+  update_check: true
+special-functions:
+  commands:
+    output:
+      correct: true
+      partial-sleep: false
+      emoji: true
+  message-output:
+    delete_after: 10
+updates:
+  mention:
+    embs:
+      stopwatch: true
+      check: true

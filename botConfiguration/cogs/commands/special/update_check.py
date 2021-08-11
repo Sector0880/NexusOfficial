@@ -19,9 +19,11 @@ from botConfig import (
 
 from dbVars import (
 	bot_presence,
+	work_functions_mention,
+	work_functions_commands_db_info, work_functions_commands_update_check,
 	bot_output_correct, bot_output_partial_sleep, bot_output_emoji,
 	bot_message_output_delete_after,
-	bot_mention_embs_stopwatch, bot_mention_embs_checks,
+	bot_updates_mention_embs_stopwatch, bot_updates_mention_embs_check,
 	bot_testers_work_code_conditions,
 	guild_name, guild_prefix, guild_language,
 	guild_premium, guild_show_id, guild_tester,

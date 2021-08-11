@@ -6,41 +6,40 @@ import yaml
 class Bot:
 	def bot_config_data(self):
 		with open("./botConfiguration/.db/bot/botConfiguration/botConfig.yml", "r") as read_file: return yaml.safe_load(read_file)
-	def bot_switches_data(self):
-		with open("./botConfiguration/.db/bot/botConfiguration/botSwitches.yml", "r") as read_file: return yaml.safe_load(read_file)
 	
 	def get_bot_presence(self): return self.bot_config_data()["presence"]["title"]
 
-	#def get_bot_output_correct(self): return self.bot_switches_data()["dev"][0]["special-functions"][0]["commands"][0]["output"]["correct"]
-	def get_bot_output_correct(self): return self.bot_switches_data()["dev"]["special-functions"]["commands"]["output"]["correct"]
-	#def get_bot_output_partial_sleep(self): return self.bot_switches_data()["dev"][0]["special-functions"][0]["commands"][0]["output"]["partial-sleep"]
-	def get_bot_output_partial_sleep(self): return self.bot_switches_data()["dev"]["special-functions"]["commands"]["output"]["partial-sleep"]
-	#def get_bot_output_emoji(self): return self.bot_switches_data()["dev"][0]["special-functions"][0]["commands"][0]["output"]["emoji"]
-	def get_bot_output_emoji(self): return self.bot_switches_data()["dev"]["special-functions"]["commands"]["output"]["emoji"]
 
-	#def get_bot_message_output_delete_after(self): return self.bot_switches_data()["dev"][0]["special-functions"][1]["message-output"]["delete_after"]
-	def get_bot_message_output_delete_after(self): return self.bot_switches_data()["dev"]["special-functions"]["message-output"]["delete_after"]
+	def bot_switches_data(self):
+		with open("./botConfiguration/.db/bot/botConfiguration/botSwitches.yml", "r") as read_file: return yaml.safe_load(read_file)
+	
+	def get_bot_switches_testers_work_functions_mention(self): return self.bot_switches_data()["work_functions"]["mention"]
+	def get_bot_switches_testers_work_commands_db_info(self): return self.bot_switches_data()["work_commands"]["db_info"]
+	def get_bot_switches_testers_work_commands_update_check(self): return self.bot_switches_data()["work_commands"]["update_check"]
 
-	#def get_bot_mention_embs_stopwatch(self): return self.bot_switches_data()["dev"][1]["updates"][0]["commands"][0]["mention"]["embs"]["stopwatch"]
-	def get_bot_mention_embs_stopwatch(self): return self.bot_switches_data()["dev"]["updates"]["commands"]["mention"]["embs"]["stopwatch"]
-	#def get_bot_mention_embs_checks(self): return self.bot_switches_data()["dev"][1]["updates"][0]["commands"][0]["mention"]["embs"]["checks"]
-	def get_bot_mention_embs_checks(self): return self.bot_switches_data()["dev"]["updates"]["commands"]["mention"]["embs"]["checks"]
+	def get_bot_switches_output_correct(self): return self.bot_switches_data()["special-functions"]["commands"]["output"]["correct"]
+	def get_bot_switches_output_partial_sleep(self): return self.bot_switches_data()["special-functions"]["commands"]["output"]["partial-sleep"]
+	def get_bot_switches_output_emoji(self): return self.bot_switches_data()["special-functions"]["commands"]["output"]["emoji"]
 
-	#def get_bot_testers_work_code_conditions(self): return self.bot_switches_data()["testers"][0]["work_code-conditions"]
-	def get_bot_testers_work_code_conditions(self): return self.bot_switches_data()["testers"]["work_code-conditions"]
+	def get_bot_switches_message_output_delete_after(self): return self.bot_switches_data()["special-functions"]["message-output"]["delete_after"]
+
+	def get_bot_switches_updates_mention_embs_stopwatch(self): return self.bot_switches_data()["updates"]["mention"]["embs"]["stopwatch"]
+	def get_bot_switches_updates_mention_embs_check(self): return self.bot_switches_data()["updates"]["mention"]["embs"]["check"]
 
 bot_presence = Bot().get_bot_presence
 
-bot_output_correct = Bot().get_bot_output_correct
-bot_output_partial_sleep = Bot().get_bot_output_partial_sleep
-bot_output_emoji = Bot().get_bot_output_emoji
+bot_switches_testers_work_functions_mention = Bot().get_bot_switches_testers_work_functions_mention
+bot_switches_testers_work_commands_db_info = Bot().get_bot_switches_testers_work_commands_db_info
+bot_switches_testers_work_commands_update_check = Bot().get_bot_switches_testers_work_commands_update_check
 
-bot_message_output_delete_after = Bot().get_bot_message_output_delete_after
+bot_switches_output_correct = Bot().get_bot_switches_output_correct
+bot_switches_output_partial_sleep = Bot().get_bot_switches_output_partial_sleep
+bot_switches_output_emoji = Bot().get_bot_switches_output_emoji
 
-bot_mention_embs_stopwatch = Bot().get_bot_mention_embs_stopwatch
-bot_mention_embs_checks = Bot().get_bot_mention_embs_checks
+bot_switches_message_output_delete_after = Bot().get_bot_switches_message_output_delete_after
 
-bot_testers_work_code_conditions = Bot().get_bot_testers_work_code_conditions
+bot_switches_updates_mention_embs_stopwatch = Bot().get_bot_switches_updates_mention_embs_stopwatch
+bot_switches_updates_mention_embs_check = Bot().get_bot_switches_updates_mention_embs_check
 
 
 class Guild:
@@ -74,19 +73,36 @@ class Staff:
 
 	def get_staff_owner_id(self): return self.staff_config_data()["owner"]["id"]
 
-	def get_testers_list(self): return self.staff_config_data()["testers"]["testers-list"]
+	def get_staff_testers_main_testers(self): return self.staff_config_data()["testers"]["main-testers"]["testers-list"]
+
+	def get_staff_testers_divided_testers_for_functions_mention(self): return self.staff_config_data()["testers"]["divided-testers"]["for_functions"]["mention"]["testers-list"]
+
+	def get_staff_testers_divided_testers_for_commands_db_info(self): return self.staff_config_data()["testers"]["divided-testers"]["for_commands"]["db_info"]["testers-list"]
+	def get_staff_testers_divided_testers_for_commands_update_check(self): return self.staff_config_data()["testers"]["divided-testers"]["for_commands"]["update_check"]["testers-list"]
 
 staff_owner_id = Staff().get_staff_owner_id
 
-staff_testers_list = Staff().get_testers_list
+staff_testers_main_testers = Staff().get_staff_testers_main_testers
+
+staff_testers_divided_testers_for_functions_mention = Staff().get_staff_testers_divided_testers_for_functions_mention
+
+staff_testers_divided_testers_for_commands_db_info = Staff().get_staff_testers_divided_testers_for_commands_db_info
+staff_testers_divided_testers_for_commands_update_check = Staff().get_staff_testers_divided_testers_for_commands_update_check
 
 
 class Doc:
 	class Errors:
+		def get_error_switch_false_function_blocked(self):
+			with open("./botConfiguration/.db/doc/errors/switchFalse/functionBlocked.yml") as read_file: return yaml.safe_load(read_file)
+		def get_error_switch_false_command_blocked(self):
+			with open("./botConfiguration/.db/doc/errors/switchFalse/commandBlocked.yml") as read_file: return yaml.safe_load(read_file)
+
+		def get_error_if_not_guild_tester(self):
+			with open("./botConfiguration/.db/doc/errors/ifNotGuildTester.yml") as read_file: return yaml.safe_load(read_file)
+		def get_error_command_not_found(self):
+			with open("./botConfiguration/.db/doc/errors/commandNotFound.yml") as read_file: return yaml.safe_load(read_file)
 		def get_error_server_blocked(self):
 			with open("./botConfiguration/.db/doc/errors/serverBlocked.yml") as read_file: return yaml.safe_load(read_file)
-		def get_error_user_not_tester(self):
-			with open("./botConfiguration/.db/doc/errors/userNotTester.yml") as read_file: return yaml.safe_load(read_file)
 		def get_error_invalid_language(self):
 			with open("./botConfiguration/.db/doc/errors/invalidLanguage.yml") as read_file: return yaml.safe_load(read_file)
 		def get_error_terminal_traceback_error(self):
@@ -94,8 +110,12 @@ class Doc:
 		def get_error_terminal_command_error(self):
 			with open("./botConfiguration/.db/doc/errors/terminalCommandError.yml") as read_file: return yaml.safe_load(read_file)
 
+error_switch_false_function_blocked = Doc().Errors().get_error_switch_false_function_blocked
+error_switch_false_command_blocked = Doc().Errors().get_error_switch_false_command_blocked
+
+error_if_not_guild_tester = Doc().Errors().get_error_if_not_guild_tester
+error_command_not_found = Doc().Errors().get_error_command_not_found
 error_server_blocked = Doc().Errors().get_error_server_blocked
-error_user_not_tester = Doc().Errors().get_error_user_not_tester
 error_invalid_language = Doc().Errors().get_error_invalid_language
 error_terminal_traceback_error = Doc().Errors().get_error_terminal_traceback_error
 error_terminal_command_error = Doc().Errors().get_error_terminal_command_error

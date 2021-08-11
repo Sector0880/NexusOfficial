@@ -134,5 +134,39 @@
                 }
             }
         ]
+    },
+    "847937758310826025": {
+        "overview": {
+            "name": "A.N.I.M.A.L.S",
+            "owner": 660376095765561374
+        },
+        "prefix": "j!",
+        "language": "ru",
+        "additional-features": [
+            {
+                "privileges": [
+                    {
+                        "premium": false
+                    }
+                ]
+            },
+            {
+                "modes": [
+                    {
+                        "tester": false
+                    }
+                ]
+            },
+            {
+                "show_id": false
+            }
+        ],
+        "protection": [
+            {
+                "gateaway": {
+                    "bot_output": true
+                }
+            }
+        ]
     }
 }
