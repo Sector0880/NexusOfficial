@@ -16,7 +16,7 @@ class GuildsEvents(commands.Cog):
 
 		guilds_config_data[str(guild.id)] = {
 			"overview": {
-				"name": guild.name,
+				"guild_name": guild.name,
 				"owner": guild.owner.id
 			},
 
@@ -60,7 +60,7 @@ class GuildsEvents(commands.Cog):
 			if str(guild.id) not in guilds_config_data.keys():
 				guilds_config_data[str(guild.id)] = {
 					"overview": {
-						"name": guild.name,
+						"guild_name": guild.name,
 						"owner": guild.owner.id
 					},
 

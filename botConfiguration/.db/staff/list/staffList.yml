@@ -8,10 +8,9 @@ testers:
   main-testers:
     testers-list: [0]
   divided-testers:
-    for_functions:
+    for_commands:
       mention:
         testers-list: [0]
-    for_commands:
       db_info:
         testers-list: [0]
       update_check:

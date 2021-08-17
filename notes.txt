@@ -17,7 +17,7 @@ from botConfig import (
 Импорты всех данных с dbVars | version 1.0:
 from dbVars import (
 	bot_presence,
-	bot_switches_testers_work_functions_mention,
+	bot_switches_testers_work_commands_mention,
 	bot_switches_testers_work_commands_db_info, bot_switches_testers_work_commands_update_check,
 	bot_switches_output_correct, bot_switches_output_partial_sleep, bot_switches_output_emoji,
 	bot_switches_message_output_delete_after,
@@ -25,9 +25,9 @@ from dbVars import (
 	guild_name, guild_prefix, guild_language, guild_premium, guild_show_id, guild_tester, guild_bot_output,
 	staff_owner_id,
 	staff_testers_main_testers,
-	staff_testers_divided_testers_for_functions_mention,
+	staff_testers_divided_testers_for_commands_mention,
 	staff_testers_divided_testers_for_commands_db_info, staff_testers_divided_testers_for_commands_update_check,
-	error_switch_false_function_blocked, error_switch_false_command_blocked,
+	error_switch_false_command_blocked,
 	error_if_not_guild_tester,
 	error_command_not_found, error_server_blocked, error_invalid_language,
 	error_terminal_traceback_error, error_terminal_command_error

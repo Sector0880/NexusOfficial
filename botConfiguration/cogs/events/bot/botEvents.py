@@ -21,7 +21,7 @@ from botConfig import (
 
 from dbVars import (
 	bot_presence,
-	bot_switches_testers_work_functions_mention,
+	bot_switches_testers_work_commands_mention,
 	bot_switches_testers_work_commands_db_info, bot_switches_testers_work_commands_update_check,
 	bot_switches_output_correct, bot_switches_output_partial_sleep, bot_switches_output_emoji,
 	bot_switches_message_output_delete_after,
@@ -29,9 +29,9 @@ from dbVars import (
 	guild_name, guild_prefix, guild_language, guild_premium, guild_show_id, guild_tester, guild_bot_output,
 	staff_owner_id,
 	staff_testers_main_testers,
-	staff_testers_divided_testers_for_functions_mention,
+	staff_testers_divided_testers_for_commands_mention,
 	staff_testers_divided_testers_for_commands_db_info, staff_testers_divided_testers_for_commands_update_check,
-	error_switch_false_function_blocked, error_switch_false_command_blocked,
+	error_switch_false_command_blocked,
 	error_if_not_guild_tester,
 	error_command_not_found, error_server_blocked, error_invalid_language,
 	error_terminal_traceback_error, error_terminal_command_error
@@ -50,16 +50,16 @@ class BotEvents(commands.Cog):
 
 
 			if self.bot.user.mention in message.content or f"<@!{self.bot.user.id}>" in message.content:
-				if not bot_switches_testers_work_functions_mention():
+				if not bot_switches_testers_work_commands_mention():
 					if not guild_tester(ctx = message):
-						if guild_language(ctx = message) == "ru": return await message.channel.send(
-							embed = discord.Embed(
-								description = error_if_not_guild_tester()["ru"]["error"]["output"].format(emoji_mark_error),
-								color = color_error
-							)
-						)
+						if guild_language(ctx = message) == "ru": return await message.channel.send(embed = discord.Embed(
+							#description = "{emoji_mark_error} Функция в режиме тестирования. К сожалению, Ваш сервер не имеет доступа к использовании этой функции."
+							description = error_if_not_guild_tester()["ru"]["error"]["output"].format(emoji_mark_error),
+							color = color_error
+						))
 						elif guild_language(ctx = message) == "uk": return await message.channel.send(
 							embed = discord.Embed(
+								#description = "{emoji_mark_error} Функція в режимі тестування. На жаль, Ваш сервер не має доступу до використання цієї функції."
 								description = error_if_not_guild_tester()["uk"]["error"]["output"].format(emoji_mark_error),
 								color = color_error
 							)
@@ -90,46 +90,46 @@ class BotEvents(commands.Cog):
 								color = color_error
 							))
 
-					testers_list = staff_testers_main_testers()#, staff_testers_divided_testers_for_functions_mention()
-					for tester in testers_list:
-						if message.author.id != tester:
-							if guild_language(ctx = message) == "ru": return await message.channel.send(
-								embed = discord.Embed(
-									description = error_switch_false_function_blocked()["ru"]["error"]["output"].format(emoji_mark_error),
-									color = color_error
+					for main_tester in staff_testers_main_testers():
+						for divided_tester in staff_testers_divided_testers_for_commands_mention():
+							if message.author.id != main_tester and message.author.id != divided_tester:
+								if guild_language(ctx = message) == "ru": return await message.channel.send(
+									embed = discord.Embed(
+										description = error_switch_false_command_blocked()["ru"]["error"]["output"].format(emoji_mark_error),
+										color = color_error
+									)
 								)
-							)
-							elif guild_language(ctx = message) == "uk": return await message.channel.send(
-								embed = discord.Embed(
-									description = error_switch_false_function_blocked()["uk"]["error"]["output"].format(emoji_mark_error),
-									color = color_error
+								elif guild_language(ctx = message) == "uk": return await message.channel.send(
+									embed = discord.Embed(
+										description = error_switch_false_command_blocked()["uk"]["error"]["output"].format(emoji_mark_error),
+										color = color_error
+									)
 								)
-							)
-							else:
-								await message.channel.send(embed = discord.Embed(
-									description = "\n".join([
-										#title = f"{emoji_mark_error if bot_switches_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
-										error_invalid_language()["ru"]["error"]["description1"].format(
-											emoji_mark_error if bot_switches_output_emoji() else "",
-											guild_language(ctx = message)
-										),
-										#f"Языки бота: `{', '.join(bot_languages)}`."
-										error_invalid_language()["ru"]["error"]["description2"].format(", ".join(bot_languages))
-									]),
-									color = color_error
-								))
-								return await message.channel.send(embed = discord.Embed(
-									description = "\n".join([
-										#title = f"{emoji_mark_error if bot_switches_output_emoji() else ''} Варто підтримуваний мову `{guild_language(ctx = message)}`.",
-										error_invalid_language()["uk"]["error"]["description1"].format(
-											emoji_mark_error if bot_switches_output_emoji() else "",
-											guild_language(ctx = message)
-										),
-										#f"Мови бота: `{', '.join(bot_languages)}`."
-										error_invalid_language()["uk"]["error"]["description2"].format(", ".join(bot_languages))
-									]),
-									color = color_error
-								))
+								else:
+									await message.channel.send(embed = discord.Embed(
+										description = "\n".join([
+											#title = f"{emoji_mark_error if bot_switches_output_emoji() else ''} Стоит неподдерживаемый язык `{guild_language(ctx = message)}`.",
+											error_invalid_language()["ru"]["error"]["description1"].format(
+												emoji_mark_error if bot_switches_output_emoji() else "",
+												guild_language(ctx = message)
+											),
+											#f"Языки бота: `{', '.join(bot_languages)}`."
+											error_invalid_language()["ru"]["error"]["description2"].format(", ".join(bot_languages))
+										]),
+										color = color_error
+									))
+									return await message.channel.send(embed = discord.Embed(
+										description = "\n".join([
+											#title = f"{emoji_mark_error if bot_switches_output_emoji() else ''} Варто підтримуваний мову `{guild_language(ctx = message)}`.",
+											error_invalid_language()["uk"]["error"]["description1"].format(
+												emoji_mark_error if bot_switches_output_emoji() else "",
+												guild_language(ctx = message)
+											),
+											#f"Мови бота: `{', '.join(bot_languages)}`."
+											error_invalid_language()["uk"]["error"]["description2"].format(", ".join(bot_languages))
+										]),
+										color = color_error
+									))
 
 				if not guild_bot_output(ctx = message):
 					if guild_language(ctx = message) == "ru": return await message.channel.send(
@@ -271,10 +271,10 @@ class BotEvents(commands.Cog):
 								f"**Пинг:** {status() if bot_switches_output_correct() else status}",
 								"**Шард:** #1. Kaia",
 								#f"**База данных:** {(f'{emoji_db_ok} `OK`' if bot_switches_output_emoji() else '`OK`') if bot_switches_output_correct() else 'None'}"
-								f"**База данных:** "
-								+ (
-									f"{emoji_db_ok} `OK`" if bot_switches_output_emoji() else "`OK`"
-								) if bot_switches_output_correct() else "None"
+								#f"**БД сервера(бета):** "
+								#+ (
+									#f"{emoji_db_rework} `CODE REWRITING`" if bot_switches_output_emoji() else "`OK`"
+								#) if bot_switches_output_correct() else "None"
 							])
 						)
 						embs.add_field(
@@ -350,8 +350,7 @@ class BotEvents(commands.Cog):
 					if guild_language(ctx = message) == "ru":
 						await message.channel.send(
 							embed = discord.Embed(
-								description = f"{emoji_mark_success if bot_switches_output_emoji() else ''} Никаких ограничений на этом сервере не было установлено."
-								+ "\nВсе моды дизбалансированы, они не несут никакой привилегии.",
+								description = f"{emoji_mark_success if bot_switches_output_emoji() else ''} Никаких ограничений на этом сервере не было установлено.",
 								color = color_success
 							).set_footer(text = "Nexus security | version 0.9.1"),
 							delete_after = bot_switches_message_output_delete_after() if isinstance(bot_switches_message_output_delete_after(), int) else None

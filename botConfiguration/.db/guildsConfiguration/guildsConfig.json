@@ -1,7 +1,7 @@
 {
     "747455374453375109": {
         "overview": {
-            "name": "Библиотека ShadowofObscurity",
+            "guild_name": "Библиотека ShadowofObscurity",
             "owner": 522136072151367691
         },
         "prefix": "j!",
@@ -35,7 +35,7 @@
     },
     "766739590815809568": {
         "overview": {
-            "name": "Тест ShadowofObscurity",
+            "guild_name": "Тест ShadowofObscurity",
             "owner": 522136072151367691
         },
         "prefix": "j!",
@@ -69,7 +69,7 @@
     },
     "807127997839573024": {
         "overview": {
-            "name": "NexusBeta",
+            "guild_name": "NexusBeta",
             "owner": 522136072151367691
         },
         "prefix": "j!",
@@ -103,7 +103,7 @@
     },
     "815119789110198293": {
         "overview": {
-            "name": "Nexus Library Beta",
+            "guild_name": "Nexus Library Beta",
             "owner": 522136072151367691
         },
         "prefix": "j!",
@@ -137,7 +137,7 @@
     },
     "847937758310826025": {
         "overview": {
-            "name": "A.N.I.M.A.L.S",
+            "guild_name": "A.N.I.M.A.L.S",
             "owner": 660376095765561374
         },
         "prefix": "j!",

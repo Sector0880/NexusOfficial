@@ -1,8 +1,7 @@
-work_functions:
-  mention: false
 work_commands:
-  db_info: true
-  update_check: true
+  mention: false
+  db_info: false
+  update_check: false
 special-functions:
   commands:
     output:
@@ -15,4 +14,4 @@ updates:
   mention:
     embs:
       stopwatch: true
-      check: true
+      check: false
