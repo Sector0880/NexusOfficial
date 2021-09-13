@@ -1,6 +1,6 @@
 version = {
 	"number": "0.9.1.1",
-	"name": "Malifiac"
+	"name": "Febrephosten"
 }
 
 
@@ -175,10 +175,3 @@ emoji_load_none = emoji[3]["load"][3]["none"]
 
 emoji_db_ok = emoji[4]["db"][0]["ok"]
 emoji_db_rework = emoji[4]["db"][1]["rework"]
-
-
-files_status = {#"ОК" "ПРОВЕРКА" "РЕКОНСТРУКЦИЯ КОДА" "НЕИЗВЕСТНО"
-	"bot.py": "ОК",
-	"botConfig.py": "ОК",
-	"dbVars.py": "НЕИЗВЕСТНО"
-}

@@ -211,7 +211,7 @@ class BotEvents(commands.Cog):
 					(emb_1.add_field(
 						name = "Присутствие",
 						value = "\n".join([
-							"**Зашел на сервер:** ####-##-## ##:##:##"
+							"**Зашел на сервер:**\n####-##-## ##:##:##"
 							#f"**На сервере:** ..."
 						])
 					) if bot_switches_updates_mention_embs_stopwatch() else None)
@@ -254,7 +254,7 @@ class BotEvents(commands.Cog):
 							name = "Присутствие",
 							value = "\n".join([
 								#f"**Зашел на сервер:** {self.bot.joined_at.strftime('**Дата:** %d/%m/%Y | **Время:** **%H:%M:%S')}"
-								f"**Зашел на сервер:** {(str(message.guild.me.joined_at)[:-7]) if bot_switches_output_correct() else 'None'}"#\n
+								f"**Зашел на сервер:**\n{(str(message.guild.me.joined_at)[:-7]) if bot_switches_output_correct() else 'None'}"#\n
 								#f"**На сервере:** {}"
 							])
 						) if bot_switches_updates_mention_embs_stopwatch() else None)
@@ -269,7 +269,7 @@ class BotEvents(commands.Cog):
 							name = "Состояние",
 							value = "\n".join([
 								f"**Пинг:** {status() if bot_switches_output_correct() else status}",
-								"**Шард:** #1. Kaia",
+								"**Шард:** #1. Obscura",
 								#f"**База данных:** {(f'{emoji_db_ok} `OK`' if bot_switches_output_emoji() else '`OK`') if bot_switches_output_correct() else 'None'}"
 								#f"**БД сервера(бета):** "
 								#+ (

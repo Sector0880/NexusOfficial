@@ -1,4 +1,3 @@
-# ГОТОВ
 import json
 import yaml
 

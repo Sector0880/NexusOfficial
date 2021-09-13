@@ -14,7 +14,7 @@ from botConfig import (
 	emoji_db_ok, emoji_db_rework
 )
 
-Импорты всех данных с dbVars | version 1.0:
+Импорты всех данных с dbVars:
 from dbVars import (
 	bot_presence,
 	bot_switches_testers_work_commands_mention,
